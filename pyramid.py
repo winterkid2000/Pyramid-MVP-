@@ -7,6 +7,13 @@ import pandas as pd
 
 sys.path.append(os.path.abspath("."))
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 from segmentation.total import run_TS
 from converter.meshconverter_nii import nii_mask_2_stl
 from converter.bodyconverter import convert_dicom_to_nifti
@@ -112,8 +119,8 @@ class PyramidApp:
             return
 
         self.log("노스트라라사무스 집중하는 중...")
-        model_path = r"C:\Users\MIM\Desktop\myfile\files\best_model_fold1.pt" ##모델 입력, V03_Enhance.py로 돌려 얻은 모델 결과 입력
-        scaler_path = r"C:\Users\MIM\Desktop\myfile\files\scaler_fold1.pkl" ##모델과 마찬가지로 얻은 스케일러 입력
+        model_path = resource_path("model_weights.pt")
+        scaler_path = resource_path("model_scaler.pkl")
         try:
             predict_with_model(output_xlsx, model_path, scaler_path, log_callback=self.log)
             self.log("돗자리 펴야겠어요")
